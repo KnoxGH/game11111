@@ -48,3 +48,13 @@ Tune the experience by editing the values exposed through `MarbleConfig.lua`:
 - **HUD style**: swap fonts and colors in `config.Interface`.
 
 Enjoy rolling!
+
+## Testing
+
+These scripts are designed for Roblox Studio. To test the experience:
+
+1. Open your place in Roblox Studio with the scripts inserted in the services listed above.
+2. Click **Play** or **Play Here** to enter a local test session.
+3. Verify that only your marble is visible, the camera follows it, and checkpoints/coins update the HUD.
+
+Roblox Studio is required to simulate the physics objects and networking; automated testing is not available in this repository.
