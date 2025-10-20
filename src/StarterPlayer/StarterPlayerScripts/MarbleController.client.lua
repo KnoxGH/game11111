@@ -22,6 +22,7 @@ local movement = Vector3.new()
 local jumpRequested = false
 local cameraOffset = Vector3.new(0, 35, 65)
 
+local marblesFolder
 local currentMarble
 local currentForce
 local currentAngular
@@ -117,12 +118,23 @@ end
 
 -- Marble control -------------------------------------------------------------
 
-local function findMarble()
-    local marblesFolder = workspace:WaitForChild("PlayerMarbles", 5)
+local function getMarblesFolder()
     if not marblesFolder then
+        marblesFolder = workspace:FindFirstChild("PlayerMarbles")
+        if not marblesFolder then
+            marblesFolder = workspace:WaitForChild("PlayerMarbles", 5)
+        end
+    end
+
+    return marblesFolder
+end
+
+local function findMarble()
+    local folder = getMarblesFolder()
+    if not folder then
         return
     end
-    return marblesFolder:WaitForChild(player.Name, 5)
+    return folder:FindFirstChild(player.Name) or folder:WaitForChild(player.Name, 5)
 end
 
 local function populateAttachments(marble)
@@ -236,6 +248,26 @@ if player.Character then
     task.spawn(function()
         task.wait(1)
         setup()
+    end)
+end
+
+local folder = getMarblesFolder()
+if folder then
+    folder.ChildAdded:Connect(function(child)
+        if child.Name == player.Name then
+            task.delay(0.2, setup)
+        end
+    end)
+else
+    task.spawn(function()
+        local created = getMarblesFolder()
+        if created then
+            created.ChildAdded:Connect(function(child)
+                if child.Name == player.Name then
+                    task.delay(0.2, setup)
+                end
+            end)
+        end
     end)
 end
 

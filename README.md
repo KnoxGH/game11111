@@ -25,7 +25,15 @@ src/
    * Place `GameController.server.lua` inside **ServerScriptService** as a Script.
    * Place `MarbleController.client.lua` inside **StarterPlayer > StarterPlayerScripts** as a LocalScript.
    * Place `TimerGui.client.lua` inside **StarterGui** as a LocalScript.
-3. Press **Play**. The server script will automatically generate a course, spawn a marble for every player, and broadcast run/timer data to all clients.
+3. Press **Play** from the **Test** tab (or click the green ▶️ button in the top toolbar). The server script will automatically generate a course, spawn a marble for every player, and broadcast run/timer data to all clients.
+
+### Starting a playtest session later
+
+If you reopen the place and want to jump straight into the marble experience:
+
+1. Open the **Test** tab.
+2. Click **Play** (or **Play Here** to spawn at your current camera position).
+3. Wait for your camera to snap to the glowing marble—your Roblox avatar will be hidden underground while you roll.
 
 ## Features
 

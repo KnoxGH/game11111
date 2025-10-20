@@ -294,6 +294,9 @@ local function hideCharacter(character)
         if descendant:IsA("BasePart") then
             descendant.CanCollide = false
             descendant.Transparency = 1
+            pcall(function()
+                descendant.LocalTransparencyModifier = 1
+            end)
         elseif descendant:IsA("Decal") then
             descendant.Transparency = 1
         end
@@ -302,11 +305,19 @@ local function hideCharacter(character)
     local humanoid = character:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.PlatformStand = true
+        humanoid.AutoRotate = false
+        humanoid.WalkSpeed = 0
+        humanoid.JumpPower = 0
     end
 
     local primary = character.PrimaryPart or character:FindFirstChild("HumanoidRootPart")
     if primary then
         primary.Anchored = true
+        primary.CFrame = CFrame.new(config.Course.SpawnPosition + Vector3.new(0, -5000, 0))
+    end
+
+    if character.Parent then
+        character:PivotTo(CFrame.new(config.Course.SpawnPosition + Vector3.new(0, -5000, 0)))
     end
 end
 
@@ -474,6 +485,10 @@ local function onPlayerAdded(player)
     end)
 
     player:LoadCharacter()
+
+    if player.Character then
+        hideCharacter(player.Character)
+    end
 
     statusValue.Value = string.format("%s joined the course!", player.DisplayName)
 end
