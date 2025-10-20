@@ -242,6 +242,12 @@ local function createMarbleForPlayer(player)
     marble.CastShadow = true
     marble.Parent = marbleFolder
 
+    -- Allow the owning player to simulate the marble locally so the VectorForce
+    -- updates from the client take effect immediately.
+    pcall(function()
+        marble:SetNetworkOwner(player)
+    end)
+
     local bodyForce, angularVelocity = createForceAttachments(marble)
 
     local trail = Instance.new("Trail")
@@ -277,6 +283,31 @@ local function createMarbleForPlayer(player)
     }
 
     return marble
+end
+
+local function hideCharacter(character)
+    if not character then
+        return
+    end
+
+    for _, descendant in ipairs(character:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+            descendant.CanCollide = false
+            descendant.Transparency = 1
+        elseif descendant:IsA("Decal") then
+            descendant.Transparency = 1
+        end
+    end
+
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.PlatformStand = true
+    end
+
+    local primary = character.PrimaryPart or character:FindFirstChild("HumanoidRootPart")
+    if primary then
+        primary.Anchored = true
+    end
 end
 
 local function resolvePlayerFromHit(hit)
@@ -439,10 +470,7 @@ local function onPlayerAdded(player)
     resetPlayer(player)
 
     player.CharacterAdded:Connect(function(character)
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.PlatformStand = true
-        end
+        hideCharacter(character)
     end)
 
     player:LoadCharacter()
