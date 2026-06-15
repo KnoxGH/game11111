@@ -1,0 +1,38 @@
+name: Yeezy Tour Monitor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"  # every 5 minutes
+  workflow_dispatch:        # allow manual trigger
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Restore seen shows cache
+        uses: actions/cache@v4
+        with:
+          path: seen_shows.json
+          key: seen-shows-${{ github.run_id }}
+          restore-keys: seen-shows-
+
+      - name: Run monitor (single check)
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python check_once.py
+
+      - name: Save seen shows cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: seen_shows.json
+          key: seen-shows-${{ github.run_id }}
