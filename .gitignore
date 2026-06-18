@@ -1,0 +1,12 @@
+.env
+token.json
+output/
+__pycache__/
+.pytest_cache/
+*.mp3
+*.wav
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.DS_Store
